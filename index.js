@@ -32,7 +32,7 @@ async function main() {
   // Define the status parameters
   const statusParams = {
     status: process.env.MASTODON_STATUS_TEXT, // The text content of the status
-    visibility: process.env.MASTODON_STATUS_VISBILITY, // The visibility of the status
+    visibility: process.env.MASTODON_STATUS_VISIBILITY, // The visibility of the status
     // Other parameters are optional, see https://docs.joinmastodon.org/methods/statuses/
   };
 
