@@ -20,6 +20,8 @@ docker run -d \
     -e MASTODON_INSTANCE_URL="your mastodon instance url, for example https://mastodon.social" \
     -e MASTODON_USER_TOKEN="your mastodon access token" \
     -e MASTODON_STATUS_TEXT="your toot text" \
+    # takes priority over MASTODON_STATUS_TEXT
+    # -e MASTODON_STATUS_TEXTS_RANDOM="[\"your toot text 1\", \"your toot text 2\"]" \
     -e MASTODON_STATUS_VISIBILITY="unlisted" \
     --restart always \
     --name mastobot \

@@ -13,7 +13,6 @@ const required_env_vars = [
   "CRON_SCHEDULE",
   "MASTODON_INSTANCE_URL",
   "MASTODON_USER_TOKEN",
-  "MASTODON_STATUS_TEXT",
   "MASTODON_STATUS_VISIBILITY",
 ]
 
@@ -26,12 +25,45 @@ for (const env_var of required_env_vars) {
   }
 }
 
+// Test if either the MASTODON_STATUS_TEXT or MASTODON_STATUS_TEXTS_RANDOM environment variable is present
+if (!process.env.MASTODON_STATUS_TEXT && !process.env.MASTODON_STATUS_TEXTS_RANDOM) {
+  console.error(`Missing environment variable: MASTODON_STATUS_TEXT or MASTODON_STATUS_TEXTS_RANDOM - the bot cannot continue.`);
+  console.error(`One must be defined.`);
+  console.error(`Refer to the documentation for more information.`)
+}
+
+// Test if the MASTODON_STATUS_TEXTS_RANDOM environment variable is valid JSON
+if (process.env.MASTODON_STATUS_TEXTS_RANDOM) {
+  try {
+    JSON.parse(process.env.MASTODON_STATUS_TEXTS_RANDOM);
+  } catch (err) {
+    console.error(`Invalid JSON in MASTODON_STATUS_TEXTS_RANDOM environment variable: ${err}`);
+    process.exit(1);
+  }
+}
 
 // Define a function that runs the main logic of the app
 async function main() {
+  let status;
+
+  // Determine which status to post
+  if (process.env.MASTODON_STATUS_TEXTS_RANDOM) {
+    // User has specified a JSON array of statuses to choose from
+    const statusTexts = JSON.parse(process.env.MASTODON_STATUS_TEXTS_RANDOM);
+    // Choose a random status from the array
+    status = statusTexts[Math.floor(Math.random() * statusTexts.length)];
+  } else if (process.env.MASTODON_STATUS_TEXT) {
+    // User has specified a single status
+    status = process.env.MASTODON_STATUS_TEXT;
+  } else {
+    // This should never happen
+    console.error(`No status text to post!`);
+    process.exit(1);
+  }
+
   // Define the status parameters
   const statusParams = {
-    status: process.env.MASTODON_STATUS_TEXT, // The text content of the status
+    status, // The text content of the status
     visibility: process.env.MASTODON_STATUS_VISIBILITY, // The visibility of the status
     // Other parameters are optional, see https://docs.joinmastodon.org/methods/statuses/
   };
