@@ -33,7 +33,3 @@ Change the value of the `TZ` environment variable for scheduling to work properl
 ## License
 
 BSD 3-Clause License. See `LICENSE` for more information.
-
-## Donations
-
-If you would like to donate to support this project, you can do so via Liberapay - see my GitHub profile for the link.
